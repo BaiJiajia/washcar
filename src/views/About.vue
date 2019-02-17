@@ -15,6 +15,7 @@
       <div class="phone border_b o_hidden">
         <img class="f_left" src="../assets/img/phone.jpg" alt="">
         <div class="color_000 f_left">13243333333</div>
+        
         <x-icon class="f_right" type="ios-arrow-forward" size="20"></x-icon>
       </div>
       <div class="icons o_hidden border_b">
@@ -87,7 +88,7 @@ export default {
     >img{
       width: 0.32rem;
       height:0.32rem;
-      
+
     }
     div{
       margin-left: 0.2rem;
