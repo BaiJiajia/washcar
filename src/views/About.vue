@@ -1,7 +1,6 @@
 <template>
   <div class="about">
-    <x-header></x-header>
-    <h1>This is an about page</h1>
+    <div class="imgbox"><img src="../assets/img/shop.jpg" alt=""></div>
   </div>
 </template>
 <script>
@@ -12,4 +11,14 @@ export default {
   }
 }
 </script>
+<style lang="less">
+.imgbox{
+  height: 4rem;
+  width: 100%;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
 
