@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <!--<x-input placeholder="搜索"></x-input>-->
+      <mt-search v-model="searchKey" class="search"></mt-search>
       <div class="select">
       </div>
       <div class="list">
@@ -28,13 +28,14 @@
 
 <script>
 // @ is an alias to /src
+
 export default {
   name: 'home',
   components: {
   },
   data() {
     return {
-        value: [],
+        searchKey: '',
         list: [{
           name: '中国',
           value: 'china',
@@ -114,6 +115,9 @@ export default {
 }
 </script>
 <style lang="less">
+    .search {
+        height: 100%;
+    }
 .vux-x-input{
   background: #f1f1f1;
   .weui-cell__bd{
