@@ -8,8 +8,10 @@
           <div class="shopaddress color_888">杭州市江干区城星路333号</div>
         </div>
         <div class="f_right guidebox">
-          <img src="../assets/img/guide.jpg" alt="" to="/map">
+          <router-link to="/map">
+          <img src="../assets/img/guide.jpg" alt="">
           <div class="distance color_888">0.9km</div>
+          </router-link>
         </div>
       </div>
       <div class="phone border_b o_hidden bgc_fff">
@@ -64,6 +66,9 @@ export default {
       text-align: center;
       border-left: 1px solid #f1f1f1;
       padding-left: 12px;
+      a{
+        text-decoration: none;
+      }
       img{
         width: 16px;
         height: 16px;
