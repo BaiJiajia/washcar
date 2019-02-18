@@ -2,7 +2,8 @@
   <div class="home">
       <mt-search v-model="searchKey" class="search"></mt-search>
       <div class="select">
-          <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
+        <div class="address" @click="showCity = true">{{myAddresscounty}}<i class="arrow"></i></div>
+          <div class="provider" @click="showProvider = true">{{provider}}<i class="arrow"></i></div>
       </div>
       <div class="list">
         <div class="loan-item" @click="todetail(1)">
@@ -24,6 +25,11 @@
         </div>
       </div>
     </div>
+      <div class="w_picker" v-show="showCity || showProvider" @click="hidePicker" ref="picker">
+          <div class="picker_header"><p style="color: #999">取消</p><h5>选择位置</h5><p style="color: #4774d0">确定</p></div>
+          <mt-picker class="city_picker" @click.stop.native="" :slots="myAddressSlots" @change="onValuesChange" v-show="showCity"></mt-picker>
+          <mt-picker class="city_picker" @click.stop.native="" :slots="providerList" @change="onProviderChange" v-show="showProvider"></mt-picker>
+      </div>
   </div>
 </template>
 
@@ -37,35 +43,83 @@ export default {
   data() {
     return {
         searchKey: '',
-        slots: [
+        showCity: false,
+        showProvider: false,
+        provider: '服务商',
+        myAddressSlots: [
             {
                 flex: 1,
-                values: city.province,
+                defaultIndex: 1,
+                values: Object.keys(city),  //省份数组
                 className: 'slot1',
-                textAlign: 'right'
+                textAlign: 'center'
             }, {
                 divider: true,
                 content: '-',
                 className: 'slot2'
             }, {
                 flex: 1,
-                values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
+                values: [],
                 className: 'slot3',
-                textAlign: 'left'
+                textAlign: 'center'
+            },
+            {
+                divider: true,
+                content: '-',
+                className: 'slot4'
+            },
+            {
+                flex: 1,
+                values: [],
+                className: 'slot5',
+                textAlign: 'center'
             }
-        ]
+        ],
+        providerList: [
+            {
+                flex: 1,
+                defaultIndex: 0,
+                values: ["车点点", '盛大', 'SJHT'],
+                className: 'slot6',
+                textAlign: 'center'
+            }
+        ],
+        myAddressProvince:'',
+        myAddressCity:'',
+        myAddresscounty:'',
     }
   },
   methods:{
+      hidePicker() {
+        this.showCity = this.showProvider = false
+      },
     todetail(itemId){
       this.$router.push({path: '/about',query:{itemId}},)
+    },
+    onValuesChange(picker, values) {
+        if(city[values[0]]){  //这个判断类似于v-if的效果（可以不加，但是vue会报错，很不爽）
+            picker.setSlotValues(1,Object.keys(city[values[0]])); // Object.keys()会返回一个数组，当前省的数组
+            picker.setSlotValues(2,city[values[0]][values[1]]); // 区/县数据就是一个数组
+            this.myAddressProvince = values[0];
+            this.myAddressCity = values[1];
+            this.myAddresscounty = values[2];
+        }
+    },
+    onProviderChange(picker, values) {
+        this.provider = values[0]
     }
   },
   mounted() {
+      this.$refs.picker.addEventListener('touchmove', (e) => {
+          e.preventDefault()
+      }, false)
+      this.$nextTick(() => { //vue里面全部加载好了再执行的函数 （类似于setTimeout）
+          this.myAddressSlots[0].defaultIndex = 0
+      })
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
     .search {
         height: 100%;
     }
@@ -76,6 +130,82 @@ export default {
     padding: 0 10px;
     font-size: 0.28rem;
   }
+}
+.home {
+    .select {
+        width: 100%;
+        height: 1rem;
+        line-height: 1rem;
+        display: flex;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        .address {
+            width: 50%;
+            height: 100%;
+        }
+        .provider {
+            width: 50%;
+            height: 100%;
+        }
+    }
+    .arrow {
+        width: .15rem;
+        height: .15rem;
+        display: inline-block;
+        position: relative;
+        &::after{
+            content: '';
+            position: absolute;
+            width: .15rem;
+            height: .15rem;
+            border-width: 1px 1px 0 0;
+            border-color: #000;
+            border-style: solid;
+            transform: rotate(135deg);
+            transform-origin: .15rem .05rem;
+        }
+    }
+    .w_picker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.6);
+        z-index: 999;
+        overflow: hidden;
+        .picker_header {
+            position: absolute;
+            bottom: 180px;
+            left: 0;
+            width: 100%;
+            height: 1rem;
+            line-height: 1rem;
+            display: flex;
+            background: #ddd;
+            flex-flow: row nowrap;
+            justify-content: space-around;
+            h5 {
+                width: 60%;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 400;
+            }
+            p {
+                width: 20%;
+                font-size: 14px;
+                text-align: center;
+            }
+        }
+        .city_picker {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            background: #fff;
+        }
+    }
 }
 .loan-item{
     border-bottom: 1px solid #e5e5e5;
