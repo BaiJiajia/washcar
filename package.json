@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "vue": "^2.5.22",
+    "vue-amap": "^0.5.8",
     "vue-loader": "^14.2.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
