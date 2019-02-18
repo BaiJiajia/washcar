@@ -6,6 +6,8 @@ import fastclick from 'fastclick'
 import "lib-flexible/flexible.js";
 import './assets/css/reset.css'
 import { Search } from 'mint-ui';
+import AMap from 'AMap'
+Vue.use(AMap)
 
 Vue.component(Search.name, Search);
 Vue.config.productionTip = false

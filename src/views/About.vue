@@ -2,23 +2,25 @@
   <div class="about">
     <div class="imgbox"><img src="../assets/img/shop.jpg" alt=""></div>
     <div class="detailbox">
-      <div class="infobox o_hidden border_b">
+      <div class="infobox o_hidden border_b bgc_fff">
         <div class="f_left">
           <div class="shopname color_000">洗车店名称</div>
           <div class="shopaddress color_888">杭州市江干区城星路333号</div>
         </div>
         <div class="f_right guidebox">
-          <img src="../assets/img/guide.jpg" alt="">
+          <img src="../assets/img/guide.jpg" alt="" to="/map">
           <div class="distance color_888">0.9km</div>
         </div>
       </div>
-      <div class="phone border_b o_hidden">
-        <img class="f_left" src="../assets/img/phone.jpg" alt="">
-        <div class="color_000 f_left">13243333333</div>
+      <div class="phone border_b o_hidden bgc_fff">
+        <a href="tel:13243333333">
+          <img class="f_left" src="../assets/img/phone.jpg" alt="">
+          <div class="color_000 f_left">13243333333</div>
+          <img class="f_right" src="../assets/img/arrow-right.png" alt="">
+        </a>
         
-        <x-icon class="f_right" type="ios-arrow-forward" size="20"></x-icon>
       </div>
-      <div class="icons o_hidden border_b">
+      <div class="icons o_hidden bgc_fff">
         <img class="f_left" src="../assets/img/shopicon.jpg" alt="">
         <div class="f_left">
           <img src="../assets/img/icon1.jpg" alt="">
@@ -26,9 +28,9 @@
         </div>
         
       </div>
-      <div class="serves">
+      <div class="serves bgc_fff">
         <div class="color_000">服务内容</div>
-        <div class="o_hidden">
+        <div class="o_hidden container">
           <div class="f_left color_888">洗车</div><div class="f_left color_888">打蜡</div>
         </div>
       </div>
@@ -88,6 +90,7 @@ export default {
     >img{
       width: 16px;
       height:16px;
+      margin-top: 4px;
 
     }
     div{
@@ -95,6 +98,18 @@ export default {
       img{
         width: 22px;
         height: 22px;
+      }
+    }
+  }
+  .serves{
+    padding: 12px;
+    .container{
+      margin-top: 10px;
+      >div{
+        border: 1px solid #888;
+        padding: 5px;
+        border-radius: 4px;
+        margin-right: 5px;
       }
     }
   }
@@ -117,5 +132,6 @@ export default {
 .border_b{
   border-bottom: 1px solid #f1f1f1;
 }
+.bgc_fff{background-color: #fff;}
 </style>
 
