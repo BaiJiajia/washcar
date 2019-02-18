@@ -5,8 +5,9 @@ import store from './store'
 import fastclick from 'fastclick'
 import "lib-flexible/flexible.js";
 import './assets/css/reset.css'
-import { Search } from 'mint-ui';
+import { Search, Picker } from 'mint-ui';
 
+Vue.component(Picker.name, Picker);
 Vue.component(Search.name, Search);
 Vue.config.productionTip = false
 fastclick.attach(document.body)

@@ -2,6 +2,7 @@
   <div class="home">
       <mt-search v-model="searchKey" class="search"></mt-search>
       <div class="select">
+          <mt-picker :slots="slots" @change="onValuesChange"></mt-picker>
       </div>
       <div class="list">
         <div class="loan-item" @click="todetail(1)">
@@ -28,7 +29,7 @@
 
 <script>
 // @ is an alias to /src
-
+import city from '@/assets/city.json'
 export default {
   name: 'home',
   components: {
@@ -36,82 +37,32 @@ export default {
   data() {
     return {
         searchKey: '',
-        list: [{
-          name: '中国',
-          value: 'china',
-          parent: 0
-      }, {
-          name: '美国',
-          value: 'USA',
-          parent: 0
-      }, {
-          name: '广东',
-          value: 'china001',
-          parent: 'china'
-      }, {
-          name: '广西',
-          value: 'china002',
-          parent: 'china'
-      }, {
-          name: '美国001',
-          value: 'usa001',
-          parent: 'USA'
-      }, {
-          name: '美国002',
-          value: 'usa002',
-          parent: 'USA'
-      }, {
-          name: '广州',
-          value: 'gz',
-          parent: 'china001'
-      }, {
-          name: '深圳',
-          value: 'sz',
-          parent: 'china001'
-      }, {
-          name: '广西001',
-          value: 'gx001',
-          parent: 'china002'
-      }, {
-          name: '广西002',
-          value: 'gx002',
-          parent: 'china002'
-      }, {
-          name: '美国001_001',
-          value: '0003',
-          parent: 'usa001'
-      }, {
-          name: '美国001_002',
-          value: '0004',
-          parent: 'usa001'
-      }, {
-          name: '美国002_001',
-          value: '0005',
-          parent: 'usa002'
-      }, {
-          name: '美国002_002',
-          value: '0006',
-          parent: 'usa002'
-      }],
-        city: [
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-            '杭州',
-        ],
+        slots: [
+            {
+                flex: 1,
+                values: city.province,
+                className: 'slot1',
+                textAlign: 'right'
+            }, {
+                divider: true,
+                content: '-',
+                className: 'slot2'
+            }, {
+                flex: 1,
+                values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
+                className: 'slot3',
+                textAlign: 'left'
+            }
+        ]
     }
   },
   methods:{
     todetail(itemId){
       this.$router.push({path: '/about',query:{itemId}},)
     }
-  } 
+  },
+  mounted() {
+  }
 }
 </script>
 <style lang="less">
