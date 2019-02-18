@@ -6,7 +6,6 @@
 <script>
 
 import AMap from 'AMap'
-import AMapUI from 'AMapUI'
 export default {
     data () {
         return {
