@@ -3,12 +3,12 @@
     <div class="imgbox"><img :src="$route.query.img" alt=""></div>
     <div class="detailbox">
       <div class="infobox o_hidden border_b bgc_fff">
-        <div class="f_left" style="width: 85%">
+        <div class="f_left" style="width: 80%">
           <div class="shopname color_000">{{$route.query.name}}</div>
           <div class="shopaddress color_888">{{$route.query.address}}</div>
         </div>
-        <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}">
-          <div class="f_right guidebox">
+        <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}"  style="display: inline-block;width: 20%;" class="f_right">
+          <div class="guidebox">
             <img src="../assets/img/guide.jpg" alt="">
             <div class="distance color_888">{{$route.query.distance}}km</div>
           </div>
@@ -25,9 +25,9 @@
         <img class="f_left" src="../assets/img/shopicon.jpg" alt="">
         <div class="f_left">
           <img src="../assets/img/icon1.jpg" alt="" v-if="$route.query.channelId === 'CDD'">
-          <img src="../assets/img/car.jpg" alt="" v-if="$route.query.channelId === 'sd'">  
+          <img src="../assets/img/car.jpg" alt="" v-if="$route.query.channelId === 'sd'">
+          <img src="../assets/img/icon3.png" alt="" v-if="$route.query.channelId === 'SJHT'">
         </div>
-        
       </div>
       <div class="serves bgc_fff">
         <div class="color_000">服务内容</div>

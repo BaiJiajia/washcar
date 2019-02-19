@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
     <keep-alive>
       <router-view/>
     </keep-alive>
@@ -34,6 +30,9 @@ html, body {
       color: #42b983;
     }
   }
+}
+.mint-search {
+  height: auto;
 }
 .mint-searchbar-inner .mintui-search {
   font-size: 16px;

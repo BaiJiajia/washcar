@@ -5,26 +5,29 @@
         <div class="address" @click="showCity = true">{{myAddresscounty}}<i class="arrow"></i></div>
           <div class="provider" @click="showProvider = true">{{provider}}<i class="arrow"></i></div>
       </div>
-      <div class="list">
-        <div class="loan-item" @click="todetail(shop)"  v-for="(shop,index) in shopList" :key="index">
-        <img :src="shop.img" alt="">
-        <div class="loan-box">
-            <div class="loan-name"><span>{{shop.name}}</span><i class="arrow right" /></div>
-            <div class="loan-info">
-                <div class="loan-left">
-                    <div>{{shop.address}}</div>
+      <div class="list-wrapper" ref="scroll">
+          <div class="list">
+            <div class="loan-item" @click="todetail(shop)"  v-for="(shop,index) in shopList" :key="index">
+            <img :src="shop.img" alt="">
+            <div class="loan-box">
+                <div class="loan-name"><span>{{shop.name}}</span><i class="arrow right" /></div>
+                <div class="loan-info">
+                    <div class="loan-left">
+                        <div>{{shop.address}}</div>
+                    </div>
+                    <div class="loan-right">
+                        <div>{{getFlatternDistance(point.lat, point.lng, shop.lat, shop.lng).toFixed(1)}}km</div>
+                    </div>
                 </div>
-                <div class="loan-right">
-                    <div>{{getFlatternDistance(point.lat, point.lng, shop.lat, shop.lng).toFixed(1)}}km</div>
+                <div class="icons">
+                  <img src="../assets/img/icon1.jpg" alt="" v-if="shop.channelId === 'CDD'">
+                    <img src="../assets/img/car.jpg" alt="" v-if="shop.channelId === 'sd'">
+                    <img src="../assets/img/icon3.png" alt="" v-if="shop.channelId === 'SJHT'">
                 </div>
             </div>
-            <div class="icons">
-              <img src="../assets/img/icon1.jpg" alt="" v-if="shop.channelId === 'CDD'">
-              <img src="../assets/img/car.jpg" alt="" v-if="shop.channelId === 'sd'">
-            </div>
+          </div>
         </div>
       </div>
-    </div>
       <div class="w_picker" v-show="showCity || showProvider" @click="hidePicker" ref="picker">
           <div class="picker_header"><p style="color: #999">取消</p><h5>{{showCity?'选择位置': '选择服务商'}}</h5><p style="color: #4774d0">确定</p></div>
           <mt-picker class="city_picker" @click.stop.native="" :slots="myAddressSlots" @change="onValuesChange" v-show="showCity"></mt-picker>
@@ -45,6 +48,7 @@ export default {
     return {
         searchKey: '',
         page: 1,
+        loadover: false,
         showCity: false,
         showProvider: false,
         provider: '服务商',
@@ -82,7 +86,7 @@ export default {
             {
                 flex: 1,
                 defaultIndex: 0,
-                values: ["车点点", '盛大', 'SJHT'],
+                values: ["全部", "车点点", '盛大', '小兔子'],
                 className: 'slot6',
                 textAlign: 'center'
             }
@@ -114,17 +118,33 @@ export default {
     onProviderChange(picker, values) {
         this.provider = values[0]
     },
-    getDate() {
+    getDate(push=false) {
+        if(!push) {
+            this.page = 1;
+            this.loadover = false
+        } else {
+            this.page++
+        }
         this.$request('/washStore/query1', {
             province: this.myAddressProvince,
             city: this.myAddressCity,
-            district: this.myAddresscounty,
+            district: this.myAddresscounty === "全部" ? "" : this.myAddresscounty,
             name: this.searchKey,
             page: this.page,
             size: this.pageSize,
             channelId: this.formatProvider
         }).then(res => {
-            this.shopList = res.records
+            if(push) {
+                if(res.records.length === 0) {
+                    this.loadover = true
+                } else {
+                    for(let i of res.records) {
+                        this.shopList.push(i)
+                    }
+                }
+            } else {
+                this.shopList = res.records
+            }
         })
     },
     getRad(d){
@@ -176,15 +196,14 @@ export default {
       }),
     formatProvider() {
         switch (this.provider) {
+            case '全部':
+                return ""
             case '车点点':
                 return 'CDD'
-                break;
             case '盛大':
-                return 'SD'
-                break;
-            case 'SJHT':
+                return 'sd'
+            case '小兔子':
                 return 'SJHT'
-                break;
             default:
                 break;
         }
@@ -218,11 +237,14 @@ export default {
               this.getDate()
           })
       },
-      searchKey(newVal) {
+      searchKey() {
           this.getDate()
       }
   },
   activated() {
+
+  },
+  mounted() {
       if(this.district && this.city && this.province) {
           this.myAddressCity = this.city
           this.myAddressProvince = this.province
@@ -249,16 +271,16 @@ export default {
       this.$refs.picker.addEventListener('touchmove', (e) => {
           e.preventDefault()
       }, false)
-  },
-  mounted() {
-      
+      this.$refs.scroll.addEventListener('scroll', (e) => {
+          if(e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop > 50) {
+              if(this.loadover) return
+              this.getDate(true)
+          }
+      })
   }
 }
 </script>
 <style lang="less" scoped>
-    .search {
-        height: 100%;
-    }
 .vux-x-input{
   background: #f1f1f1;
   .weui-cell__bd{
@@ -268,6 +290,8 @@ export default {
   }
 }
 .home {
+    width: 100%;
+    height: 100%;
     .select {
         width: 100%;
         height: 1rem;
@@ -361,6 +385,12 @@ export default {
             background: #fff;
         }
     }
+}
+.list-wrapper {
+    width: 100%;
+    height: calc(100% - 53px - 1rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .loan-item{
     border-bottom: 1px solid #e5e5e5;
