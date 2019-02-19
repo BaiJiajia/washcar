@@ -1,39 +1,38 @@
 <template>
   <div class="about">
-    <div class="imgbox"><img src="../assets/img/shop.jpg" alt=""></div>
+    <div class="imgbox"><img :src="$route.query.img" alt=""></div>
     <div class="detailbox">
       <div class="infobox o_hidden border_b bgc_fff">
-        <div class="f_left">
-          <div class="shopname color_000">洗车店名称</div>
-          <div class="shopaddress color_888">杭州市江干区城星路333号</div>
+        <div class="f_left" style="width: 85%">
+          <div class="shopname color_000">{{$route.query.name}}</div>
+          <div class="shopaddress color_888">{{$route.query.address}}</div>
         </div>
-        <div class="f_right guidebox">
-          <router-link to="/map">
-          <img src="../assets/img/guide.jpg" alt="">
-          <div class="distance color_888">0.9km</div>
-          </router-link>
+        <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}">
+          <div class="f_right guidebox">
+            <img src="../assets/img/guide.jpg" alt="">
+            <div class="distance color_888">{{$route.query.distance}}km</div>
+          </div>
+        </router-link>
+      </div>
+      <a :href="`tel:${$route.query.phone}`">
+        <div class="phone border_b o_hidden bgc_fff">
+            <img class="f_left" src="../assets/img/phone.jpg" alt="">
+            <div class="color_000 f_left">{{$route.query.phone}}</div>
+            <img class="f_right" src="../assets/img/arrow-right.png" alt="">
         </div>
-      </div>
-      <div class="phone border_b o_hidden bgc_fff">
-        <a href="tel:13243333333">
-          <img class="f_left" src="../assets/img/phone.jpg" alt="">
-          <div class="color_000 f_left">13243333333</div>
-          <img class="f_right" src="../assets/img/arrow-right.png" alt="">
-        </a>
-        
-      </div>
+      </a>
       <div class="icons o_hidden bgc_fff">
         <img class="f_left" src="../assets/img/shopicon.jpg" alt="">
         <div class="f_left">
-          <img src="../assets/img/icon1.jpg" alt="">
-          <img src="../assets/img/car.jpg" alt="">  
+          <img src="../assets/img/icon1.jpg" alt="" v-if="$route.query.channelId === 'CDD'">
+          <img src="../assets/img/car.jpg" alt="" v-if="$route.query.channelId === 'sd'">  
         </div>
         
       </div>
       <div class="serves bgc_fff">
         <div class="color_000">服务内容</div>
         <div class="o_hidden container">
-          <div class="f_left color_888">洗车</div><div class="f_left color_888">打蜡</div>
+          <div class="f_left color_888">{{$route.query.service}}</div>
         </div>
       </div>
     </div>
