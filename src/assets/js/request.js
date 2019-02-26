@@ -35,3 +35,19 @@ Vue.prototype.$request = (api, query, method = "get") => {
     query: method === "get" ? null : query
   });
 };
+
+Vue.prototype.$getJson = function (method) {
+  return new Promise((resolve, reject) => {
+    Axios({
+      method: 'get',
+      url: method,
+      dataType: "json",
+      crossDomain: true,
+      cache: false
+    }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}
