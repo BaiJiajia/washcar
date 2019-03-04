@@ -9,7 +9,7 @@
         {{ provider }}<i class="arrow"></i>
       </div>
     </div>
-    <div class="list-wrapper" ref="scroll">
+    <div class="list-wrapper" ref="scroll" v-show="isActive">
       <div class="list">
         <div
           class="loan-item"
@@ -25,7 +25,7 @@
             </div>
             <div class="loan-info">
               <div class="loan-left">
-                <div>{{ shop.address }}</div>
+                {{ shop.address }}
               </div>
               <div class="loan-right">
                 <div>
@@ -60,6 +60,12 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="nActive" v-show="!isActive">
+      <h3>该地区不可用</h3>
+    </div>
+    <div class="nActive" v-show="emptyData">
+      <h3>该地区暂无店铺，请换个地区试试</h3>
     </div>
     <div
       class="w_picker"
@@ -98,8 +104,10 @@ export default {
   components: {},
   data() {
     return {
+      emptyData: false,
       searchKey: "",
       page: 1,
+      isActive: false,
       loadover: false,
       showCity: false,
       showProvider: false,
@@ -110,7 +118,7 @@ export default {
       myAddressSlots: [
         {
           flex: 1,
-          defaultIndex: 1,
+          defaultIndex: 0,
           values: [], //省份数组
           className: "slot1",
           textAlign: "center"
@@ -123,6 +131,7 @@ export default {
         {
           flex: 1,
           values: [],
+          defaultIndex: 0,
           className: "slot3",
           textAlign: "center"
         },
@@ -150,7 +159,7 @@ export default {
       myAddressProvince: "",
       myAddressCity: "",
       myAddresscounty: "",
-      pageSize: 20,
+      pageSize: 300,
       shopList: []
     };
   },
@@ -175,15 +184,17 @@ export default {
     },
     onValuesChange(picker, values) {
       if (this.cityList[values[0]]) {
-        //这个判断类似于v-if的效果（可以不加，但是vue会报错，很不爽）
-        picker.setSlotValues(1, Object.keys(this.cityList[values[0]])); // Object.keys()会返回一个数组，当前省的数组
+        picker.setSlotValues(1, Object.keys(this.cityList[values[0]]));
         picker.setSlotValues(
           2,
           this.setIgnore(this.cityList[values[0]][values[1]])
-        ); // 区/县数据就是一个数组
+        );
         this.myAddressProvince = values[0];
         this.myAddressCity = values[1];
         this.myAddresscounty = values[2];
+        if(values[2]) {
+          this.isActive = true
+        }
       }
     },
     setIgnore(districtArr) {
@@ -204,7 +215,7 @@ export default {
       let newArr = [];
       for (let i of channelArr) {
         if (i[0] === "*") {
-          this.nChannel.push(i.slice(1));
+          this.nChannel.push(this.formatProvider(i.slice(1)));
         } else {
           newArr.push(i);
         }
@@ -218,6 +229,7 @@ export default {
       if (!push) {
         this.page = 1;
         this.loadover = false;
+        this.emptyData = false;
       } else {
         this.page++;
       }
@@ -230,7 +242,7 @@ export default {
         size: this.pageSize,
         nDistrict: this.nDistrict.join(","),
         nChannel: this.nChannel.join(","),
-        channelId: this.formatProvider
+        channelId: this.formatProvider(this.provider)
       }).then(res => {
         if (push) {
           if (res.records.length === 0) {
@@ -241,13 +253,35 @@ export default {
             }
           }
         } else {
-          this.shopList = res.records;
+          if(!res.records.length) {
+            this.emptyData = true
+          }
+          this.shopList = this.sortByDistance(res.records);
         }
       });
+    },
+    sortByDistance(arr) {
+      return arr.sort((a, b) => {
+        return this.getFlatternDistance(this.point.lat, this.point.lng, a.lat, a.lng) - this.getFlatternDistance(this.point.lat, this.point.lng, b.lat, b.lng)
+      })
     },
     getRad(d) {
       var PI = Math.PI;
       return (d * PI) / 180.0;
+    },
+    formatCity(cityJSON) {
+      let cityArr = {}
+      for(let i of Object.keys(cityJSON)) {
+        if(i[0] !== "*") {
+          cityArr[i] = {}
+          for(let j of Object.keys(cityJSON[i])) {
+            if(j[0] !== "*") {
+              cityArr[i][j] = cityJSON[i][j]
+            }
+          }
+        }
+      }
+     return cityArr
     },
     getFlatternDistance(lat1, lng1, lat2, lng2) {
       var EARTH_RADIUS = 6378137.0; //单位M
@@ -277,6 +311,20 @@ export default {
       h2 = (3 * r + 1) / 2 / s;
 
       return (d * (1 + fl * (h1 * sf * (1 - sg) - h2 * (1 - sf) * sg))) / 1000;
+    },
+    formatProvider(data) {
+      switch (data) {
+        case "全部":
+          return "";
+        case "车点点":
+          return "CDD";
+        case "盛大":
+          return "sd";
+        case "小兔子":
+          return "SJHT";
+        default:
+          return "";
+      }
     }
   },
   computed: {
@@ -294,20 +342,7 @@ export default {
         return store.point;
       }
     }),
-    formatProvider() {
-      switch (this.provider) {
-        case "全部":
-          return "";
-        case "车点点":
-          return "CDD";
-        case "盛大":
-          return "sd";
-        case "小兔子":
-          return "SJHT";
-        default:
-          return "";
-      }
-    }
+
   },
   watch: {
     city(newVal) {
@@ -319,17 +354,19 @@ export default {
     district(newVal) {
       this.myAddresscounty = newVal;
       this.$nextTick(() => {
+        this.isActive = false
         for (let i in Object.keys(this.cityList)) {
           if (Object.keys(this.cityList)[i] === this.province) {
-            this.myAddressSlots[0].defaultIndex = +i;
             for (let j in Object.keys(this.cityList[this.province])) {
               if (Object.keys(this.cityList[this.province])[j] === this.city) {
-                this.myAddressSlots[2].defaultIndex = +j;
                 let districtArr = this.setIgnore(
                   this.cityList[this.province][this.city]
                 );
                 for (let k in districtArr) {
                   if (districtArr[k] === this.district) {
+                    this.isActive = true
+                    this.myAddressSlots[0].defaultIndex = +i;
+                    this.myAddressSlots[2].defaultIndex = +j;
                     this.myAddressSlots[4].defaultIndex = +k;
                   }
                 }
@@ -337,7 +374,9 @@ export default {
             }
           }
         }
-        this.getDate();
+        if(this.isActive) {
+          this.getDate();
+        }
       });
     },
     searchKey() {
@@ -348,7 +387,7 @@ export default {
   created() {
     let providerArr
     this.$getJson(`./${this.$route.query.location || 'city'}.json`).then(data => {
-      this.cityList = data.data
+      this.cityList = this.formatCity(data.data)
       this.$getJson(`./${this.$route.query.channel || 'provider'}.json`).then(data => {
         providerArr = data.data
         this.myAddressSlots[0].values = Object.keys(this.cityList);
@@ -418,6 +457,17 @@ export default {
     padding: 0 10px;
     font-size: 0.28rem;
   }
+}
+.nActive {
+  position: absolute;
+  top: 3rem;
+  left: 0;
+  height: 60%;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
 }
 .home {
   width: 100%;
@@ -518,7 +568,7 @@ export default {
 }
 .list-wrapper {
   width: 100%;
-  height: calc(100% - 53px - 1rem);
+  height: calc(100% - 54px - 1rem);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -545,6 +595,12 @@ export default {
       flex-flow: row nowrap;
       justify-content: space-between;
       align-items: center;
+      span {
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
     .loan-info {
       display: flex;
@@ -556,6 +612,10 @@ export default {
       color: #888888;
       .loan-left {
         text-align: left;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .loan-right {
         text-align: right;
