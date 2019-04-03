@@ -20,5 +20,5 @@ if (navigator.geolocation) {
 }
 
 navigator.geolocation.getCurrentPosition((position) => {
-    alert(position)
+    // alert(position)
 });

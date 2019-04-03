@@ -46,7 +46,7 @@ export default {
 </script>
 <style lang="less">
 .imgbox{
-  height: 6rem;
+  height: 225px;
   width: 100%;
   img{
     width: 100%;

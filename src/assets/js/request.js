@@ -2,7 +2,7 @@ import Axios from "axios";
 import Vue from "vue";
 
 // const host = "/api";
-const host = "http://one.dydigit.com/xichedian";
+const host = "https://one.dydigit.com/xichedian";
 const serve = Axios.create({
   // baseURL: '/api'
   baseURL: host,

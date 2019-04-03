@@ -56,6 +56,7 @@
                 alt=""
                 v-if="shop.channelId === 'SJHT'"
               />
+              <span class="name">{{formatProvider(shop.channelId)}}</span>
             </div>
           </div>
         </div>
@@ -322,6 +323,12 @@ export default {
           return "sd";
         case "小兔子":
           return "SJHT";
+        case "SJHT":
+          return "小兔子";
+        case "sd":
+          return "盛大";
+        case "CDD":
+          return "车点点";
         default:
           return "";
       }
@@ -455,12 +462,12 @@ export default {
   .weui-cell__bd {
     background: #ffffff;
     padding: 0 10px;
-    font-size: 0.28rem;
+    font-size: 14px;
   }
 }
 .nActive {
   position: absolute;
-  top: 3rem;
+  top: 20%;
   left: 0;
   height: 60%;
   width: 100%;
@@ -474,8 +481,8 @@ export default {
   height: 100%;
   .select {
     width: 100%;
-    height: 1rem;
-    line-height: 1rem;
+    height: 38px;
+    line-height: 38px;
     display: flex;
     text-align: center;
     border-top: 0.5px solid #d9d9d9;
@@ -506,20 +513,20 @@ export default {
     }
   }
   .arrow {
-    width: 0.15rem;
-    height: 0.15rem;
+    width: 5px;
+    height: 5px;
     display: inline-block;
     position: relative;
     &::after {
       content: "";
       position: absolute;
-      width: 0.15rem;
-      height: 0.15rem;
+      width: 5px;
+      height: 5px;
       border-width: 1px 1px 0 0;
       border-color: #575757;
       border-style: solid;
       transform: rotate(135deg);
-      transform-origin: 0.15rem 0.05rem;
+      transform-origin: 5px 1px;
     }
     &.right::after {
       transform: rotate(45deg);
@@ -539,8 +546,8 @@ export default {
       bottom: 180px;
       left: 0;
       width: 100%;
-      height: 1rem;
-      line-height: 1rem;
+      height: 38px;
+      line-height: 38px;
       display: flex;
       background: #ddd;
       flex-flow: row nowrap;
@@ -568,7 +575,7 @@ export default {
 }
 .list-wrapper {
   width: 100%;
-  height: calc(100% - 54px - 1rem);
+  height: calc(100% - 54px - 38px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -579,17 +586,17 @@ export default {
   background-color: #fff;
   > img {
     float: left;
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 68px;
+    height: 68px;
   }
   .loan-box {
-    margin-left: 2rem;
+    margin-left: 75px;
     .loan-name {
       width: 98%;
       font-size: 16px;
       color: #333333;
       text-align: left;
-      line-height: 0.5rem;
+      line-height: 18px;
       font-weight: bold;
       display: flex;
       flex-flow: row nowrap;
@@ -608,7 +615,7 @@ export default {
       justify-content: space-between;
       font-size: 14px;
       line-height: 1.2;
-      margin: 0.2rem 0;
+      margin: 7.5px 0;
       color: #888888;
       .loan-left {
         text-align: left;
@@ -627,9 +634,15 @@ export default {
     .icons {
       text-align: left;
       font: initial;
-      height: 0.4rem;
+      height: 15px;
       img {
         height: 100%;
+        vertical-align: middle
+      }
+      .name {
+        vertical-align: middle;
+        font-size: 14px;
+        color: #575757
       }
     }
   }
