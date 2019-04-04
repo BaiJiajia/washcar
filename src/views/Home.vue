@@ -3,10 +3,12 @@
     <mt-search v-model.lazy="searchKey" class="search"></mt-search>
     <div class="select">
       <div class="address" @click="showCity = true">
-        {{ myAddresscounty }}<i class="arrow"></i>
+        {{ myAddresscounty }}
+        <i class="arrow"></i>
       </div>
       <div class="provider" @click="showProvider = true">
-        {{ provider }}<i class="arrow"></i>
+        {{ provider }}
+        <i class="arrow"></i>
       </div>
     </div>
     <div class="list-wrapper" ref="scroll" v-show="isActive">
@@ -17,52 +19,38 @@
           v-for="(shop, index) in shopList"
           :key="index"
         >
-          <img :src="shop.img" alt="" />
+          <img :src="shop.img" alt>
           <div class="loan-box">
             <div class="loan-name">
-              <span>{{ shop.name }}</span
-              ><i class="arrow right" />
+              <span>{{ shop.name }}</span>
+              <i class="arrow right"/>
             </div>
             <div class="loan-info">
-              <div class="loan-left">
-                {{ shop.address }}
-              </div>
+              <div class="loan-left">{{ shop.address }}</div>
               <div class="loan-right">
                 <div>
                   {{
-                    getFlatternDistance(
-                      point ? point.lat : 0,
-                      point ? point.lng : 0,
-                      shop ? shop.lat : 0,
-                      shop ? shop.lng : 0
-                    ) ? 
-                    getFlatternDistance(
-                      point ? point.lat : 0,
-                      point ? point.lng : 0,
-                      shop ? shop.lat : 0,
-                      shop ? shop.lng : 0
-                    ).toFixed(1) +'km'
-                    : ""
+                  getFlatternDistance(
+                  point ? point.lat : 0,
+                  point ? point.lng : 0,
+                  shop ? shop.lat : 0,
+                  shop ? shop.lng : 0
+                  ) ?
+                  getFlatternDistance(
+                  point ? point.lat : 0,
+                  point ? point.lng : 0,
+                  shop ? shop.lat : 0,
+                  shop ? shop.lng : 0
+                  ).toFixed(1) +'km'
+                  : ""
                   }}
                 </div>
               </div>
             </div>
             <div class="icons">
-              <img
-                src="../assets/img/icon1.jpg"
-                alt=""
-                v-if="shop.channelId === 'CDD'"
-              />
-              <img
-                src="../assets/img/car.jpg"
-                alt=""
-                v-if="shop.channelId === 'sd'"
-              />
-              <img
-                src="../assets/img/icon3.png"
-                alt=""
-                v-if="shop.channelId === 'SJHT'"
-              />
+              <img src="../assets/img/icon1.jpg" alt v-if="shop.channelId === 'CDD'">
+              <img src="../assets/img/car.jpg" alt v-if="shop.channelId === 'sd'">
+              <img src="../assets/img/icon3.png" alt v-if="shop.channelId === 'SJHT'">
               <span class="name">{{formatProvider(shop.channelId)}}</span>
             </div>
           </div>
@@ -75,12 +63,7 @@
     <div class="nActive" v-show="emptyData">
       <h3>该地区暂无店铺，请换个地区试试</h3>
     </div>
-    <div
-      class="w_picker"
-      v-show="showCity || showProvider"
-      @click="hidePicker"
-      ref="picker"
-    >
+    <div class="w_picker" v-show="showCity || showProvider" @click="hidePicker" ref="picker">
       <div class="picker_header">
         <p style="color: #999">取消</p>
         <h5>{{ showCity ? "选择位置" : "选择服务商" }}</h5>
@@ -88,14 +71,14 @@
       </div>
       <mt-picker
         class="city_picker"
-        @click.stop.native=""
+        @click.stop.native
         :slots="myAddressSlots"
         @change="onValuesChange"
         v-show="showCity"
       ></mt-picker>
       <mt-picker
         class="city_picker"
-        @click.stop.native=""
+        @click.stop.native
         :slots="providerList"
         @change="onProviderChange"
         v-show="showProvider"
@@ -107,7 +90,7 @@
 <script>
 // @ is an alias to /src
 import { mapState } from "vuex";
-import getPosition from '../assets/js/getPosition'
+import getPosition from "../assets/js/getPosition";
 export default {
   name: "home",
   components: {},
@@ -201,8 +184,8 @@ export default {
         this.myAddressProvince = values[0];
         this.myAddressCity = values[1];
         this.myAddresscounty = values[2];
-        if(values[2]) {
-          this.isActive = true
+        if (values[2]) {
+          this.isActive = true;
         }
       }
     },
@@ -262,20 +245,33 @@ export default {
             }
           }
         } else {
-          if(!res.records.length) {
-            this.emptyData = true
+          if (!res.records.length) {
+            this.emptyData = true;
           }
           this.shopList = this.sortByDistance(res.records);
         }
       });
     },
     sortByDistance(arr) {
-      if(this.point && this.point.lat && this.point.lng) {
+      if (this.point && this.point.lat && this.point.lng) {
         return arr.sort((a, b) => {
-          return this.getFlatternDistance(this.point.lat, this.point.lng, a.lat, a.lng) - this.getFlatternDistance(this.point.lat, this.point.lng, b.lat, b.lng)
-        })
+          return (
+            this.getFlatternDistance(
+              this.point.lat,
+              this.point.lng,
+              a.lat,
+              a.lng
+            ) -
+            this.getFlatternDistance(
+              this.point.lat,
+              this.point.lng,
+              b.lat,
+              b.lng
+            )
+          );
+        });
       } else {
-        return arr
+        return arr;
       }
     },
     getRad(d) {
@@ -283,23 +279,23 @@ export default {
       return (d * PI) / 180.0;
     },
     formatCity(cityJSON) {
-      let cityArr = {}
-      for(let i of Object.keys(cityJSON)) {
-        if(i[0] !== "*") {
-          cityArr[i] = {}
-          for(let j of Object.keys(cityJSON[i])) {
-            if(j[0] !== "*") {
-              cityArr[i][j] = cityJSON[i][j]
+      let cityArr = {};
+      for (let i of Object.keys(cityJSON)) {
+        if (i[0] !== "*") {
+          cityArr[i] = {};
+          for (let j of Object.keys(cityJSON[i])) {
+            if (j[0] !== "*") {
+              cityArr[i][j] = cityJSON[i][j];
             }
           }
         }
       }
-     return cityArr
+      return cityArr;
     },
     getFlatternDistance(lat1, lng1, lat2, lng2) {
       lat1 = +lat1;
-      lng1 = +lng1
-      if(!lat1 || !lng1 || !lat2 || !lng2) return 0
+      lng1 = +lng1;
+      if (!lat1 || !lng1 || !lat2 || !lng2) return 0;
       var EARTH_RADIUS = 6378137.0; //单位M
       var f = this.getRad((lat1 + lat2) / 2);
       var g = this.getRad((lat1 - lat2) / 2);
@@ -363,8 +359,7 @@ export default {
       point: store => {
         return store.point;
       }
-    }),
-
+    })
   },
   watch: {
     city(newVal) {
@@ -376,7 +371,7 @@ export default {
     district(newVal) {
       this.myAddresscounty = newVal;
       this.$nextTick(() => {
-        this.isActive = false
+        this.isActive = false;
         for (let i in Object.keys(this.cityList)) {
           if (Object.keys(this.cityList)[i] === this.province) {
             for (let j in Object.keys(this.cityList[this.province])) {
@@ -386,7 +381,7 @@ export default {
                 );
                 for (let k in districtArr) {
                   if (districtArr[k] === this.district) {
-                    this.isActive = true
+                    this.isActive = true;
                     this.myAddressSlots[0].defaultIndex = +i;
                     this.myAddressSlots[2].defaultIndex = +j;
                     this.myAddressSlots[4].defaultIndex = +k;
@@ -396,7 +391,7 @@ export default {
             }
           }
         }
-        if(this.isActive) {
+        if (this.isActive) {
           this.getDate();
         }
       });
@@ -407,24 +402,28 @@ export default {
   },
   activated() {},
   beforeCreate() {
-    let providerArr
-    this.$getJson(`./${this.$route.query.location || 'city'}.json`).then(data => {
-      this.cityList = this.formatCity(data.data)
-      this.$getJson(`./${this.$route.query.channel || 'provider'}.json`).then(data => {
-        providerArr = data.data
-        this.myAddressSlots[0].values = Object.keys(this.cityList);
-        this.providerList = [
-          {
-            flex: 1,
-            defaultIndex: 0,
-            values: this.setChannel(providerArr),
-            className: "slot6",
-            textAlign: "center"
+    let providerArr;
+    this.$getJson(`./${this.$route.query.location || "city"}.json`).then(
+      data => {
+        this.cityList = this.formatCity(data.data);
+        this.$getJson(`./${this.$route.query.channel || "provider"}.json`).then(
+          data => {
+            providerArr = data.data;
+            this.myAddressSlots[0].values = Object.keys(this.cityList);
+            this.providerList = [
+              {
+                flex: 1,
+                defaultIndex: 0,
+                values: this.setChannel(providerArr),
+                className: "slot6",
+                textAlign: "center"
+              }
+            ];
+            getPosition();
           }
-        ];
-        getPosition()
-      })
-    })
+        );
+      }
+    );
   },
   mounted() {
     if (this.district && this.city && this.province) {
@@ -653,12 +652,12 @@ export default {
       height: 15px;
       img {
         height: 100%;
-        vertical-align: middle
+        vertical-align: middle;
       }
       .name {
         vertical-align: middle;
         font-size: 14px;
-        color: #575757
+        color: #575757;
       }
     }
   }
