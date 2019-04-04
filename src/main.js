@@ -7,7 +7,7 @@ import fastclick from 'fastclick'
 import './assets/css/reset.css'
 import { Search, Picker } from 'mint-ui';
 import './assets/js/request.js'
-import './assets/js/getPosition.js'
+// import './assets/js/getPosition.js'
 // import VConsole from 'vconsole'
 
 // var vConsole = new VConsole();
@@ -21,3 +21,8 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+
+
+document.body.onresize = function() {
+  document.body.style.width = `${window.screen.width}px`
+}

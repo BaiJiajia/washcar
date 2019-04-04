@@ -31,12 +31,19 @@
                 <div>
                   {{
                     getFlatternDistance(
-                      point.lat,
-                      point.lng,
-                      shop.lat,
-                      shop.lng
-                    ).toFixed(1)
-                  }}km
+                      point ? point.lat : 0,
+                      point ? point.lng : 0,
+                      shop ? shop.lat : 0,
+                      shop ? shop.lng : 0
+                    ) ? 
+                    getFlatternDistance(
+                      point ? point.lat : 0,
+                      point ? point.lng : 0,
+                      shop ? shop.lat : 0,
+                      shop ? shop.lng : 0
+                    ).toFixed(1) +'km'
+                    : ""
+                  }}
                 </div>
               </div>
             </div>
@@ -100,6 +107,7 @@
 <script>
 // @ is an alias to /src
 import { mapState } from "vuex";
+import getPosition from '../assets/js/getPosition'
 export default {
   name: "home",
   components: {},
@@ -175,8 +183,8 @@ export default {
         query: {
           ...shop,
           distance: this.getFlatternDistance(
-            this.point.lat,
-            this.point.lng,
+            this.point ? this.point.lat : 0,
+            this.point ? this.point.lng : 0,
             shop.lat,
             shop.lng
           ).toFixed(1)
@@ -262,9 +270,13 @@ export default {
       });
     },
     sortByDistance(arr) {
-      return arr.sort((a, b) => {
-        return this.getFlatternDistance(this.point.lat, this.point.lng, a.lat, a.lng) - this.getFlatternDistance(this.point.lat, this.point.lng, b.lat, b.lng)
-      })
+      if(this.point && this.point.lat && this.point.lng) {
+        return arr.sort((a, b) => {
+          return this.getFlatternDistance(this.point.lat, this.point.lng, a.lat, a.lng) - this.getFlatternDistance(this.point.lat, this.point.lng, b.lat, b.lng)
+        })
+      } else {
+        return arr
+      }
     },
     getRad(d) {
       var PI = Math.PI;
@@ -285,6 +297,9 @@ export default {
      return cityArr
     },
     getFlatternDistance(lat1, lng1, lat2, lng2) {
+      lat1 = +lat1;
+      lng1 = +lng1
+      if(!lat1 || !lng1 || !lat2 || !lng2) return 0
       var EARTH_RADIUS = 6378137.0; //单位M
       var f = this.getRad((lat1 + lat2) / 2);
       var g = this.getRad((lat1 - lat2) / 2);
@@ -391,7 +406,7 @@ export default {
     }
   },
   activated() {},
-  created() {
+  beforeCreate() {
     let providerArr
     this.$getJson(`./${this.$route.query.location || 'city'}.json`).then(data => {
       this.cityList = this.formatCity(data.data)
@@ -407,6 +422,7 @@ export default {
             textAlign: "center"
           }
         ];
+        getPosition()
       })
     })
   },
@@ -542,7 +558,7 @@ export default {
     z-index: 999;
     overflow: hidden;
     .picker_header {
-      position: absolute;
+      position: fixed;
       bottom: 180px;
       left: 0;
       width: 100%;
@@ -565,7 +581,7 @@ export default {
       }
     }
     .city_picker {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       width: 100%;
       left: 0;

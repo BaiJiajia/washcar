@@ -10,7 +10,7 @@
         <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}"  style="display: inline-block;width: 20%;" class="f_right">
           <div class="guidebox">
             <img src="../assets/img/guide.jpg" alt="">
-            <div class="distance color_888">{{$route.query.distance}}km</div>
+            <div class="distance color_888">{{ !!+$route.query.distance ? $route.query.distance + 'km' : ""}}</div>
           </div>
         </router-link>
       </div>

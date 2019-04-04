@@ -12,10 +12,10 @@ export default new Vuex.Store({
   },
   mutations: {
       setPosition(state, payload) {
-        state.point = payload.point
-        state.province = payload.addressComponents.province
-        state.city = payload.addressComponents.city
-        state.district = payload.addressComponents.district
+        state.point = payload.location
+        state.province = payload.ad_info.province
+        state.city = payload.ad_info.city
+        state.district = payload.ad_info.district
       }
   },
   actions: {
