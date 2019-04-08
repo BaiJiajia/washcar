@@ -7,7 +7,7 @@ import fastclick from 'fastclick'
 import './assets/css/reset.css'
 import { Search, Picker } from 'mint-ui';
 import './assets/js/request.js'
-// import './assets/js/getPosition.js'
+import './assets/js/getPosition.js'
 // import VConsole from 'vconsole'
 
 // var vConsole = new VConsole();
@@ -15,7 +15,6 @@ Vue.component(Picker.name, Picker);
 Vue.component(Search.name, Search);
 Vue.config.productionTip = false
 fastclick.attach(document.body)
-
 new Vue({
   router,
   store,

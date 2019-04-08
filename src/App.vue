@@ -8,8 +8,9 @@
 
 <style lang="less">
 html, body {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  padding: constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left);
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

@@ -7,12 +7,15 @@
           <div class="shopname color_000">{{$route.query.name}}</div>
           <div class="shopaddress color_888">{{$route.query.address}}</div>
         </div>
-        <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}"  style="display: inline-block;width: 20%;" class="f_right">
+        <div @click="golink">
+
+        <!-- <router-link :to="{path:'/map', query: {lat: $route.query.lat, lng:$route.query.lng}}"  style="display: inline-block;width: 20%;" class="f_right"> -->
           <div class="guidebox">
             <img src="../assets/img/guide.jpg" alt="">
             <div class="distance color_888">{{ !!+$route.query.distance ? $route.query.distance + 'km' : ""}}</div>
           </div>
-        </router-link>
+        <!-- </router-link> -->
+        </div>
       </div>
       <a :href="`tel:${$route.query.phone}`">
         <div class="phone border_b o_hidden bgc_fff">
@@ -41,6 +44,12 @@
 <script>
 export default {
   components:{
+  },
+  methods: {
+    golink() {
+      let {address, lng, lat } = this.$route.query
+      location.href = `https://map.qq.com/nav/drive#routes/page?eword=${this.$route.query.address}&epointx=${this.lng}&epointy=${lat}&referer=washcaar&key=HXNBZ-22Z3G-AIQQS-IUM5J-NQQPO-N2BJA&footdetail=0&zoombutton=&trafficbutton=&rehttps=&_user_gps_track=&navimenu=&transport=2&backurl=&back=&graytest=&ref=&showSimunavi=&topbar=0&spointy=&spointx=`
+    }
   }
 }
 </script>
