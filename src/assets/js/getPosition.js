@@ -7,7 +7,7 @@ import store from '../../store'
 // }
 var geolocation = new qq.maps.Geolocation("HXNBZ-22Z3G-AIQQS-IUM5J-NQQPO-N2BJA", "washcar");
 geolocation.getLocation(res => {
-    store.commit('setPosition', res)
+    store.dispatch('getBaiduPosition', res)
 }, err => {
     console.log(err)
 }, {timeout: 9000});

@@ -17,7 +17,69 @@
           v-for="(shop, index) in shopList"
           :key="index"
         >
-          <img :src="shop.img" alt="" />
+          <div class="locan-item_img">
+            <img v-lazy="shop.img" alt="" />
+          </div>
+          <div class="loan-box">
+            <div class="loan-name">
+              <span>{{ shop.name }}</span
+              ><i class="arrow right" />
+            </div>
+            <div class="loan-info">
+              <div class="loan-left">
+                {{ shop.address }}
+              </div>
+              <div class="loan-right">
+                <div>
+                  {{
+                    getFlatternDistance(
+                      point ? point.lat : 0,
+                      point ? point.lng : 0,
+                      shop ? shop.lat : 0,
+                      shop ? shop.lng : 0
+                    ) ? 
+                    getFlatternDistance(
+                      point ? point.lat : 0,
+                      point ? point.lng : 0,
+                      shop ? shop.lat : 0,
+                      shop ? shop.lng : 0
+                    ).toFixed(1) +'km'
+                    : ""
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="icons">
+              <img
+                src="../assets/img/icon1.jpg"
+                alt=""
+                v-if="shop.channelId === 'CDD'"
+              />
+              <img
+                src="../assets/img/car.jpg"
+                alt=""
+                v-if="shop.channelId === 'sd'"
+              />
+              <img
+                src="../assets/img/icon3.png"
+                alt=""
+                v-if="shop.channelId === 'SJHT'"
+              />
+              <span class="name">{{formatProvider(shop.channelId)}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+       <div class="list">
+        <div
+          class="loan-item close"
+          @click="todetail(shop)"
+          v-for="(shop, index) in closeList"
+          :key="index"
+        >
+          <div class="locan-item_img">
+            <img v-lazy="shop.img" alt="" />
+          </div>
           <div class="loan-box">
             <div class="loan-name">
               <span>{{ shop.name }}</span
@@ -169,7 +231,8 @@ export default {
       myAddressCity: "",
       myAddresscounty: "",
       pageSize: 300,
-      shopList: []
+      shopList: [],
+      closeList: [],
     };
   },
   methods: {
@@ -258,14 +321,28 @@ export default {
             this.loadover = true;
           } else {
             for (let i of res.records) {
-              this.shopList.push(i);
+              if(i.name[i.name.length -1] === '*') {
+                i.name = i.name.slice(0, -1)
+                this.closeList.push(i)
+              } else {
+                this.shopList.push(i)
+              }
             }
           }
         } else {
+          this.shopList = []
+          this.closeList = []
           if(!res.records.length) {
             this.emptyData = true
           }
-          this.shopList = this.sortByDistance(res.records);
+          this.sortByDistance(res.records).forEach(item => {
+            if(item.name[item.name.length -1] === '*') {
+              item.name = item.name.slice(0, -1)
+              this.closeList.push(item)
+            } else {
+              this.shopList.push(item)
+            }
+          })
         }
       });
     },
@@ -422,7 +499,6 @@ export default {
             textAlign: "center"
           }
         ];
-        // getPosition()
       })
     })
   },
@@ -462,7 +538,7 @@ export default {
     );
     this.$refs.scroll.addEventListener("scroll", e => {
       if (
-        e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop >
+        e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop <
         50
       ) {
         if (this.loadover) return;
@@ -600,10 +676,32 @@ export default {
   padding: 10px;
   overflow: hidden;
   background-color: #fff;
-  > img {
+  &.close {
+    .locan-item_img {
+      &::after {
+        content: '打烊';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6)
+      }
+    }
+  }
+  .locan-item_img {
     float: left;
+    position: relative;
     width: 68px;
     height: 68px;
+    line-height: 68px;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .loan-box {
     margin-left: 75px;

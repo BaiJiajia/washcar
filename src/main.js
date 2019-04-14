@@ -8,6 +8,9 @@ import './assets/css/reset.css'
 import { Search, Picker } from 'mint-ui';
 import './assets/js/request.js'
 import './assets/js/getPosition.js'
+import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueLazyload)
 // import VConsole from 'vconsole'
 
 // var vConsole = new VConsole();
