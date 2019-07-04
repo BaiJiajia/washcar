@@ -658,8 +658,17 @@ export default {
   > img,
   .closeShop {
     float: left;
+    position: relative;
     width: 68px;
     height: 68px;
+    line-height: 68px;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .closeShop {
     position: relative;

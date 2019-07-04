@@ -47,8 +47,9 @@ export default {
   },
   methods: {
     golink() {
-      let {address, lng, lat } = this.$route.query
-      location.href = `https://map.qq.com/nav/drive#routes/page?eword=${this.$route.query.address}&epointx=${this.lng}&epointy=${lat}&referer=washcaar&key=HXNBZ-22Z3G-AIQQS-IUM5J-NQQPO-N2BJA&footdetail=0&zoombutton=&trafficbutton=&rehttps=&_user_gps_track=&navimenu=&transport=2&backurl=&back=&graytest=&ref=&showSimunavi=&topbar=0&spointy=&spointx=`
+      let {lng, lat } = this.$route.query
+        this.$router.push({path:'/map', query: {lng: lng, lat: lat}})
+      // location.href = `https://map.qq.com/nav/drive#routes/page?eword=${this.$route.query.name}&epointx=${lng}&epointy=${lat}&referer=washcaar&key=HXNBZ-22Z3G-AIQQS-IUM5J-NQQPO-N2BJA&footdetail=0&zoombutton=&trafficbutton=&rehttps=&_user_gps_track=&navimenu=&transport=2&backurl=&back=&graytest=&ref=&showSimunavi=&topbar=0&spointy=&spointx=`
     }
   }
 }

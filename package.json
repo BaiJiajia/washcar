@@ -25,6 +25,7 @@
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "fastclick": "^1.0.6",
+    "jquery": "^3.4.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "lib-flexible": "^0.3.2",
